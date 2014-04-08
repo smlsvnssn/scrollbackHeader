@@ -23,7 +23,7 @@ $( window ).load( function (){
 			max: 1200,
 			min: 768
 		}
-    }
+	}
 	$( '#header' ).scrollbackHeader( options );
 });
 
@@ -33,16 +33,16 @@ $( window ).load( function (){
     $.scrollbackHeader = function(element, options) {
 		'use strict';
 
-        var defaults = {
+		var defaults = {
 			adjustBodyMargin: true,
 			centered: false,
 			widthBounds: {
 				max: -1,
 				min: -1,
 			}
-        },
+		},
 		$element = $(element),
-        element = element,
+		element = element,
 		plugin = this,
 		$window = $(window),
 		firstScrollUp = true,
@@ -51,10 +51,10 @@ $( window ).load( function (){
 		scrollTop,
 		elementTop;
 		
-        plugin.settings = {};
+		plugin.settings = {};
 
-        plugin.init = function() {
-            plugin.settings = $.extend( true, {}, defaults, options );
+		plugin.init = function() {
+			plugin.settings = $.extend( true, {}, defaults, options );
 
 			if ( plugin.settings.adjustBodyMargin == true ) {
 				$('body').css({
@@ -74,7 +74,7 @@ $( window ).load( function (){
 			
 			setAbsolute($window.scrollTop());
 			onResize();
-        }
+		}
 
 		function onScroll(e){
 			// check window width bounds			
@@ -85,8 +85,8 @@ $( window ).load( function (){
 					if ( firstScrollUp  && $element.css('position') === 'fixed') {
 						setAbsolute(scrollTop);
 					};
-			       	firstScrollUp = false;
-			   	} else {
+					firstScrollUp = false;
+				} else {
 					// scroll up
 					elementTop = $element.css('top').replace(/[^-\d\.]/g, '');
 					
@@ -101,9 +101,9 @@ $( window ).load( function (){
 					};
 					
 					firstScrollUp = true;
-			   	}
-			
-			   	lastScrollTop = scrollTop;
+				}
+
+				lastScrollTop = scrollTop;
 			
 			} else {
 				$element.removeAttr('style');
@@ -138,15 +138,15 @@ $( window ).load( function (){
 			})
 		}
 
-        plugin.init();
-    }
+		plugin.init();
+	}
 
-    $.fn.scrollbackHeader = function(options) {
-        return this.each(function() {
-            if (undefined == $(this).data('scrollbackHeader')) {
-                var plugin = new $.scrollbackHeader(this, options);
-                $(this).data('scrollbackHeader', plugin);
-            }
-        });
-    }
+	$.fn.scrollbackHeader = function(options) {
+		return this.each(function() {
+			if (undefined == $(this).data('scrollbackHeader')) {
+				var plugin = new $.scrollbackHeader(this, options);
+				$(this).data('scrollbackHeader', plugin);
+			}
+		});
+	}
 })(jQuery);
