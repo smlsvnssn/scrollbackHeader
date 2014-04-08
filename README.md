@@ -10,6 +10,9 @@ to the top when needed, and scrolls away when not needed. Simple!
 * **widthBounds**, lets you set window width bounds for when behaviour is active, max for 
 maximum active width, min for minimum width (default: { max: -1, min: -1 }, i.e. false).
 
+####Demo:
+http://blog.lhli.net
+
 ####Usage:
 Call on window load instead of ready, to get the correct heights.
 ``` JavaScript
