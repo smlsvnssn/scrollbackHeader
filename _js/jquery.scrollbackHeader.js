@@ -54,7 +54,7 @@ $( window ).load( function (){
         plugin.settings = {};
 
         plugin.init = function() {
-            plugin.settings = $.extend({}, defaults, options);
+            plugin.settings = $.extend( true, {}, defaults, options );
 
 			if ( plugin.settings.adjustBodyMargin == true ) {
 				$('body').css({
