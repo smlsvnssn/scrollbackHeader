@@ -76,13 +76,13 @@ $( window ).load( function (){
 				checkWidthBounds = false;
 			}
 			
-			// bind to events
-			$window.scroll(onScroll);
-			$window.resize(onResize);
-			
 			// initial calls
 			setAbsolute($window.scrollTop());
 			onResize();
+			
+			// bind to events
+			$window.scroll(onScroll);
+			$window.resize(onResize);
 		}
 
 		function onScroll(e){
