@@ -11,7 +11,7 @@ to the top when needed, and scrolls away when not needed. Simple!
 maximum active width, min for minimum width (default: { max: -1, min: -1 }, i.e. false).
 
 ####Demo:
-http://stuff.lhli.net/scrollbackHeader/demo or http://blog.lhli.net
+http://stuff.lhli.net/scrollbackHeader or http://blog.lhli.net
 
 ####Usage:
 Call on window load instead of ready, to get the correct heights.
