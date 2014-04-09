@@ -23,7 +23,7 @@ $( window ).load( function (){
 			max: 1200,
 			min: 768
 		}
-    }
+	}
 	$( '#header' ).scrollbackHeader( options );
 });
 
@@ -33,16 +33,16 @@ $( window ).load( function (){
     $.scrollbackHeader = function(element, options) {
 		'use strict';
 
-        var defaults = {
+		var defaults = {
 			adjustBodyMargin: true,
 			centered: false,
 			widthBounds: {
 				max: -1,
 				min: -1,
 			}
-        },
+		},
 		$element = $(element),
-        element = element,
+		element = element,
 		plugin = this,
 		$window = $(window),
 		firstScrollUp = true,
@@ -51,17 +51,24 @@ $( window ).load( function (){
 		scrollTop,
 		elementTop;
 		
-        plugin.settings = {};
+		plugin.settings = {};
 
-        plugin.init = function() {
-            plugin.settings = $.extend( true, {}, defaults, options );
+		plugin.init = function() {
+			plugin.settings = $.extend( true, {}, defaults, options );
+			
+			// set overflow:auto just in case
+			$element.css({
+				overflow: 'auto'
+			});
 
+			// set body margin
 			if ( plugin.settings.adjustBodyMargin == true ) {
 				$('body').css({
-					'margin-top': $element.height()
+					'margin-top': $element.outerHeight(true)
 				});
 			};
 			
+			// adjust bounds settings
 			if ( plugin.settings.widthBounds.min >= 0 || plugin.settings.widthBounds.max >= 0 ) {
 				plugin.settings.widthBounds.min = ( plugin.settings.widthBounds.min == -1 ) ? 0 : plugin.settings.widthBounds.min;
 				plugin.settings.widthBounds.max = ( plugin.settings.widthBounds.max == -1 ) ? 100000 : plugin.settings.widthBounds.max;
@@ -69,12 +76,14 @@ $( window ).load( function (){
 				checkWidthBounds = false;
 			}
 			
+			// bind to events
 			$window.scroll(onScroll);
 			$window.resize(onResize);
 			
+			// initial calls
 			setAbsolute($window.scrollTop());
 			onResize();
-        }
+		}
 
 		function onScroll(e){
 			// check window width bounds			
@@ -85,14 +94,14 @@ $( window ).load( function (){
 					if ( firstScrollUp  && $element.css('position') === 'fixed') {
 						setAbsolute(scrollTop);
 					};
-			       	firstScrollUp = false;
-			   	} else {
+					firstScrollUp = false;
+				} else {
 					// scroll up
 					elementTop = $element.css('top').replace(/[^-\d\.]/g, '');
 					
-					if ( !firstScrollUp && scrollTop > 0 && elementTop < scrollTop - $element.height() ) {
+					if ( !firstScrollUp && scrollTop > 0 && elementTop < scrollTop - $element.outerHeight(true) ) {
 						$element.css({
-							top: scrollTop - $element.height()
+							top: scrollTop - $element.outerHeight(true)
 						})
 					};
 					
@@ -101,11 +110,12 @@ $( window ).load( function (){
 					};
 					
 					firstScrollUp = true;
-			   	}
-			
-			   	lastScrollTop = scrollTop;
+				}
+
+				lastScrollTop = scrollTop;
 			
 			} else {
+				// clear effects. Potential conflict with other plugins using style on body tag.
 				$element.removeAttr('style');
 				$('body').removeAttr('style');
 			}
@@ -120,7 +130,7 @@ $( window ).load( function (){
 		
 		function center(){
 			$element.css({
-				left: Math.max(($window.width()/2) - ($element.width()/2), 0)
+				left: Math.max(($window.width()/2) - ($element.outerWidth(true)/2), 0)
 			});
 		}
 		
@@ -138,15 +148,15 @@ $( window ).load( function (){
 			})
 		}
 
-        plugin.init();
-    }
+		plugin.init();
+	}
 
-    $.fn.scrollbackHeader = function(options) {
-        return this.each(function() {
-            if (undefined == $(this).data('scrollbackHeader')) {
-                var plugin = new $.scrollbackHeader(this, options);
-                $(this).data('scrollbackHeader', plugin);
-            }
-        });
-    }
+	$.fn.scrollbackHeader = function(options) {
+		return this.each(function() {
+			if (undefined == $(this).data('scrollbackHeader')) {
+				var plugin = new $.scrollbackHeader(this, options);
+				$(this).data('scrollbackHeader', plugin);
+			}
+		});
+	}
 })(jQuery);

@@ -55,13 +55,20 @@ $( window ).load( function (){
 
 		plugin.init = function() {
 			plugin.settings = $.extend( true, {}, defaults, options );
+			
+			// set overflow:auto just in case
+			$element.css({
+				overflow: 'auto'
+			});
 
+			// set body margin
 			if ( plugin.settings.adjustBodyMargin == true ) {
 				$('body').css({
-					'margin-top': $element.height()
+					'margin-top': $element.outerHeight(true)
 				});
 			};
 			
+			// adjust bounds settings
 			if ( plugin.settings.widthBounds.min >= 0 || plugin.settings.widthBounds.max >= 0 ) {
 				plugin.settings.widthBounds.min = ( plugin.settings.widthBounds.min == -1 ) ? 0 : plugin.settings.widthBounds.min;
 				plugin.settings.widthBounds.max = ( plugin.settings.widthBounds.max == -1 ) ? 100000 : plugin.settings.widthBounds.max;
@@ -69,9 +76,11 @@ $( window ).load( function (){
 				checkWidthBounds = false;
 			}
 			
+			// bind to events
 			$window.scroll(onScroll);
 			$window.resize(onResize);
 			
+			// initial calls
 			setAbsolute($window.scrollTop());
 			onResize();
 		}
@@ -90,9 +99,9 @@ $( window ).load( function (){
 					// scroll up
 					elementTop = $element.css('top').replace(/[^-\d\.]/g, '');
 					
-					if ( !firstScrollUp && scrollTop > 0 && elementTop < scrollTop - $element.height() ) {
+					if ( !firstScrollUp && scrollTop > 0 && elementTop < scrollTop - $element.outerHeight(true) ) {
 						$element.css({
-							top: scrollTop - $element.height()
+							top: scrollTop - $element.outerHeight(true)
 						})
 					};
 					
@@ -106,6 +115,7 @@ $( window ).load( function (){
 				lastScrollTop = scrollTop;
 			
 			} else {
+				// clear effects. Potential conflict with other plugins using style on body tag.
 				$element.removeAttr('style');
 				$('body').removeAttr('style');
 			}
@@ -120,7 +130,7 @@ $( window ).load( function (){
 		
 		function center(){
 			$element.css({
-				left: Math.max(($window.width()/2) - ($element.width()/2), 0)
+				left: Math.max(($window.width()/2) - ($element.outerWidth(true)/2), 0)
 			});
 		}
 		
