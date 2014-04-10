@@ -7,19 +7,26 @@
 
 body {
 	font: 72px/84px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: bold;
 	color: #fff;
 }
 #mainMenu li {
+	font: 24px/44px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	float: left;
 	padding-right: 30px;
 }
 #mainMenu a {
-	font: 24px/24px "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #fff;
 	text-decoration: none;
 }
 #mainMenu a:hover {
 	text-decoration: underline;
+}
+
+#wrapper {
+	max-width: 1000px;
+	width: 100%;
+	margin: auto;
 }
 
 div#header {

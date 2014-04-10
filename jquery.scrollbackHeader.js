@@ -55,19 +55,7 @@ $( window ).load( function (){
 
 		plugin.init = function() {
 			plugin.settings = $.extend( true, {}, defaults, options );
-			
-			// set overflow:auto just in case
-			$element.css({
-				overflow: 'auto'
-			});
-
-			// set body margin
-			if ( plugin.settings.adjustBodyMargin == true ) {
-				$('body').css({
-					'margin-top': $element.outerHeight(true)
-				});
-			};
-			
+						
 			// adjust bounds settings
 			if ( plugin.settings.widthBounds.min >= 0 || plugin.settings.widthBounds.max >= 0 ) {
 				plugin.settings.widthBounds.min = ( plugin.settings.widthBounds.min == -1 ) ? 0 : plugin.settings.widthBounds.min;
@@ -78,7 +66,7 @@ $( window ).load( function (){
 			
 			// initial calls
 			setAbsolute($window.scrollTop());
-			onResize();
+			setBodyMargin();
 			
 			// bind to events
 			$window.scroll(onScroll);
@@ -123,29 +111,44 @@ $( window ).load( function (){
 		
 		function onResize(e){
 			if (plugin.settings.centered) {
-				center();
+				$element.css({
+					left: center()
+				})
 			};
+			setBodyMargin();
 			onScroll();
-		}
-		
-		function center(){
-			$element.css({
-				left: Math.max(($window.width()/2) - ($element.outerWidth(true)/2), 0)
-			});
 		}
 		
 		function setFixed(){
 			$element.css({
+				width: $element.outerWidth(true),
 				position: 'fixed',
-				top: 0
+				top: 0,
+				left: center(),
+				overflow: 'auto'
 			});
 		}
 		
 		function setAbsolute(scrollTop){
 			$element.css({
+				width: $element.outerWidth(true),
 				position: 'absolute',
-				top: Math.max(scrollTop, 0)
+				top: /*Math.max(*/scrollTop/*, 0)*/,
+				left: center(),
+				overflow: 'auto'
 			})
+		}
+		
+		function setBodyMargin() {
+			if ( plugin.settings.adjustBodyMargin == true ) {
+				$('body').css({
+					'margin-top': $element.outerHeight(true)
+				});
+			};
+		}
+		
+		function center(){
+			return ( plugin.settings.centered ) ? Math.max(($window.width()/2) - ($element.outerWidth(true)/2), 0) : 0;
 		}
 
 		plugin.init();
