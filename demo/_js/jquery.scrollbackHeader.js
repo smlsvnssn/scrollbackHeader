@@ -133,7 +133,7 @@ $( window ).load( function (){
 			$element.css({
 				width: $element.outerWidth(true),
 				position: 'absolute',
-				top: /*Math.max(*/scrollTop/*, 0)*/,
+				top: Math.max(scrollTop, 0),
 				left: center(),
 				overflow: 'auto'
 			})
