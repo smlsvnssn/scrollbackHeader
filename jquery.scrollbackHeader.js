@@ -63,14 +63,17 @@ $( window ).load( function (){
 			} else {
 				checkWidthBounds = false;
 			}
-			
-			// initial calls
-			setAbsolute($window.scrollTop());
-			setBodyMargin();
-			
-			// bind to events
-			$window.scroll(onScroll);
-			$window.resize(onResize);
+			if ( ! isTouchDevice() ) {
+				// initial calls
+				setAbsolute($window.scrollTop());
+				setBodyMargin();
+
+				// bind to events
+				//$('body').on({ 'touchmove': onScroll });
+				$window.scroll(onScroll);
+				$window.resize(onResize);
+			};
+
 		}
 
 		function onScroll(e){
@@ -150,6 +153,10 @@ $( window ).load( function (){
 		function center(){
 			return ( plugin.settings.centered ) ? Math.max(($window.width()/2) - ($element.outerWidth(true)/2), 0) : 0;
 		}
+		
+		function isTouchDevice() {
+			return 'ontouchstart' in window || 'onmsgesturechange' in window;
+		};
 
 		plugin.init();
 	}
