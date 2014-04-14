@@ -12,6 +12,7 @@ maximum active width, min for minimum width (default: { max: -1, min: -1 }, i.e.
 
 ####Demo:
 http://stuff.lhli.net/scrollbackHeader or http://blog.lhli.net
+Codepen: http://codepen.io/smlsvnssn/full/DumnE/
 
 ####Known issues:
 * Shaky on iOS and various other mobile browsers, due to scrollTop value not updating while scrolling. Hints on solutions much appreciated. Touch devices disabled for now.
