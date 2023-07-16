@@ -16,14 +16,17 @@ const withScrollback = (
 			renderstate: absolute,
 		}
 
-	const elementTop = ((top, t) => () => {
-		t = t || setTimeout(() => (top = t = null)) // memoise for every animationframe
-		return (
-			top ||
-			element.getBoundingClientRect().top -
-				document.body.getBoundingClientRect().top
-		)
-	})()
+	const elementTop = (
+		(top = null, t = null) =>
+		() => {
+			t = t || requestAnimationFrame(() => (top = t = null)) // memoise for every animationframe
+			return (
+				top ||
+				element.getBoundingClientRect().top -
+					document.body.getBoundingClientRect().top
+			)
+		}
+	)()
 
 	const scrollDelta = () => state.lastScrollY - scrollY
 
@@ -65,8 +68,11 @@ const withScrollback = (
 
 	const onScroll = () => {
 		const s = getRenderstate(state.renderstate)
-		s && ((state.renderstate = s), render(s))
-		sideeffect && sideeffect(element, state.renderstate)
+		if (s) {
+			state.renderstate = s
+			render(s)
+		}
+		if (sideeffect) sideeffect(element, state.renderstate)
 		state.lastScrollY = scrollY
 	}
 

@@ -26,7 +26,7 @@ Vanilla:
 
 import withScrollback from 'scrollbackheader'
 
-destroySB = withScrollback(document.querySelector('header'));
+sb = withScrollback(document.querySelector('header'));
 
 ```
 
