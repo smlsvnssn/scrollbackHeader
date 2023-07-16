@@ -110,11 +110,10 @@ const withScrollback = (
 
 	init()
 
-	return destroy
+	return { destroy }
 }
 
 export default withScrollback
 
-//	destroySB = withScrollback(document.querySelector('header'))
-
-//destroySB()
+//sb = withScrollback(document.querySelector('header'))
+//sb.destroy()

@@ -5,7 +5,7 @@ to the top when needed, and scrolls away when not needed. Simple!
 
 Created long ago, around 2014, in the early days of headers triggered by scroll events, when headers animated themselves in on the slightest scroll upwards, and placed themselves above the text you were trying to read. Strangely, they still do, all over the internets. Please people, use this method instead!
 
-Returns a `destroy` function to call at cleanup.
+Returns an object with a `destroy` method to call at cleanup.
 
 #### Demo:
 
