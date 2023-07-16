@@ -1,0 +1,19 @@
+{
+	"name": "scrollbackheader",
+	"version": "1.0.0",
+	"description": "smlsvnssn",
+	"main": "index.mjs",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/smlsvnssn/scrollbackheader.git"
+	},
+	"keywords": [
+		"Svelte action"
+	],
+	"author": "smlsvnssn",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/smlsvnssn/scrollbackheader/issues"
+	},
+	"homepage": "https://github.com/smlsvnssn/scrollbackheader#readme"
+}

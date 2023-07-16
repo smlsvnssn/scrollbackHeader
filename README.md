@@ -1,34 +1,41 @@
-scrollbackHeader
-================
+# scrollbackHeader
 
-scrollbackHeader creates a non-stupid-behaving semi-sticky top header, that sticks 
+scrollbackHeader creates a non-stupid-behaving semi-sticky top header, that sticks
 to the top when needed, and scrolls away when not needed. Simple!
 
-#### Options:
-* **adjustBodyMargin**, sets body margin to height of element if true (default: true).
-* **centered**, centers element if true (default: false).
-* **widthBounds**, lets you set window width bounds for when behaviour is active, max for 
-maximum active width, min for minimum width (default: { max: -1, min: -1 }, i.e. false).
+Created long ago, around 2014, in the early days of headers triggered by scroll events, when headers animated themselves in on the slightest scroll upwards, and placed themselves above the text you were trying to read. Strangely, they still do, all over the internets. Please people, use this method instead!
+
+Returns a `destroy` function to call at cleanup.
 
 #### Demo:
-http://stuff.lhli.net/scrollbackHeader or http://blog.lhli.net
-Codepen: http://codepen.io/smlsvnssn/full/DumnE/
 
-#### Known issues:
-* Shaky on iOS and various other mobile browsers, due to scrollTop value not updating while scrolling. Hints on solutions much appreciated. Touch devices disabled for now.
+https://codepen.io/smlsvnssn/full/QWKZqYm
+
+#### Params:
+
+-   **element (required)**, an instance of `Element` that the effect will apply to.
+-   **sideeffect**, an optional `Function` that applies any desired sideeffect. Function is called with parameters `element` and `renderstate`. Renderstate can be either `"absolute"` (element follows page scroll), `"scrollback"` (element scrolls back into view) or `"fixed"` (element sticks to top). Example here: https://codepen.io/smlsvnssn/pen/JjWNLMB
+-   **thresholdUp**, a threshold value for activating the scrollback effect, scrolling the element back in or out of view. Defaults to 5 px/animationframe.
+-   **thresholdDown**, defaults to the same value as `thresholdUp`.
 
 #### Usage:
-Call on window load instead of ready, to get the correct heights.
-``` JavaScript
-$( window ).load( function (){
-	var options = {
-		adjustBodyMargin: true, 
-		centered: false,
-		widthBounds: {
-			max: 1200,
-			min: 768
-		}
-    }
-	$( '#header' ).scrollbackHeader( options );
-});
+
+Vanilla:
+
+```JavaScript
+
+import withScrollback from 'scrollbackheader'
+
+destroySB = withScrollback(document.querySelector('header'));
+
+```
+
+As a svelte action:
+
+```html
+<script>
+	import withScrollback from 'scrollbackheader'
+</script>
+
+<div class="header" use:withScrollback>Hello scrollbackheader!</div>
 ```
