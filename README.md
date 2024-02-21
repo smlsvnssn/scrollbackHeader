@@ -1,5 +1,9 @@
 # scrollbackHeader
 
+```Bash
+pnpm i scrollbackheader
+```
+
 scrollbackHeader creates a non-stupid-behaving semi-sticky top header, that sticks
 to the top when needed, and scrolls away when not needed. Simple!
 
