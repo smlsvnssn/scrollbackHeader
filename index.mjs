@@ -1,122 +1,129 @@
+const absolute = 'absolute',
+  scrollback = 'scrollback',
+  fixed = 'fixed'
+
 const withScrollback = (
-	element,
-	sideeffect,
-	thresholdUp = 5,
-	thresholdDown,
+  element,
+  sideeffect,
+  thresholdUp = 5,
+  thresholdDown,
 ) => {
-	const absolute = 'absolute',
-		scrollback = 'scrollback',
-		fixed = 'fixed',
-		threshold = {
-			up: thresholdUp,
-			down: thresholdDown ?? thresholdUp,
-		},
-		state = {
-			lastScrollY: 0,
-			renderstate: absolute,
-		}
+  let threshold = {
+      up: thresholdUp,
+      down: thresholdDown ?? thresholdUp,
+    },
+    state = {
+      lastScrollY: 0,
+      renderstate: absolute,
+    }
 
-	const elementTop = (
-		(top = null, t = null) =>
-		() => {
-			t = t || requestAnimationFrame(() => (top = t = null)) // memoise for every animationframe
-			return (
-				top ||
-				element.getBoundingClientRect().top -
-					document.body.getBoundingClientRect().top
-			)
-		}
-	)()
+  const elementTop = (
+    (top = null, t = null) =>
+    () => {
+      // memoise for every animationframe
+      t = t || requestAnimationFrame(() => (top = t = null))
+      top =
+        top ||
+        element.getBoundingClientRect().top -
+          document.body.getBoundingClientRect().top
 
-	const scrollDelta = () => state.lastScrollY - scrollY
+      return top
+    }
+  )()
 
-	const aboveThreshold = dir => Math.abs(scrollDelta()) > threshold[dir]
+  const scrollDelta = () => state.lastScrollY - scrollY
 
-	const getRenderstate = s =>
-		scrollDelta() < 0 // up or down?
-			? s === fixed && aboveThreshold('down')
-				? absolute
-				: null
-			: s !== fixed && elementTop() + scrollDelta() >= scrollY // overscroll?
-			? fixed
-			: s !== fixed &&
-			  aboveThreshold('up') &&
-			  elementTop() < scrollY - element.offsetHeight // scroll back in?
-			? scrollback
-			: null
+  const isAboveThreshold = dir => Math.abs(scrollDelta()) > threshold[dir]
 
-	const render = s => {
-		switch (s) {
-			case absolute:
-				element.style.position = 'absolute'
-				element.style.top = scrollY + scrollDelta() + 'px'
-				return
-			case scrollback:
-				element.style.top =
-					scrollY + scrollDelta() - element.offsetHeight + 'px'
-				return
-			case fixed:
-				element.style.position = 'fixed'
-				element.style.top = 0
-		}
-	}
+  const getRenderstate = state =>
+    // up or down?
+    scrollDelta() < 0 ?
+      state === fixed && isAboveThreshold('down') ?
+        absolute
+      : null
+      // overscroll?
+    : state !== fixed && elementTop() + scrollDelta() >= scrollY ? fixed
+      // scroll back in?
+    : (
+      state !== fixed &&
+      isAboveThreshold('up') &&
+      elementTop() < scrollY - element.offsetHeight
+    ) ?
+      scrollback
+    : null
 
-	const onAnimationFrame = (f, t) => () => {
-		cancelAnimationFrame(t)
-		t = requestAnimationFrame(f)
-	}
+  const render = state => {
+    switch (state) {
+      case absolute:
+        element.style.position = 'absolute'
+        element.style.top = scrollY + scrollDelta() + 'px'
+        return
+      case scrollback:
+        element.style.top =
+          scrollY + scrollDelta() - element.offsetHeight + 'px'
+        return
+      case fixed:
+        element.style.position = 'fixed'
+        element.style.top = 0
+    }
+  }
 
-	const onScroll = () => {
-		const s = getRenderstate(state.renderstate)
-		if (s) {
-			state.renderstate = s
-			render(s)
-		}
-		if (sideeffect) sideeffect(element, state.renderstate)
-		state.lastScrollY = scrollY
-	}
+  const onAnimationFrame = (f, t) => () => {
+    cancelAnimationFrame(t)
+    t = requestAnimationFrame(f)
+  }
 
-	const cache = {
-		position: element.style.position,
-		top: element.style.top,
-		left: element.style.left,
-		width: element.style.width,
-		bodyPaddingTop: document.body.style.paddingTop,
-		scrollHandler: onAnimationFrame(onScroll),
-		resizeHandler: () => {
-			setBodyPadding()
-			cache.scrollHandler()
-		},
-	}
+  const onScroll = () => {
+    let state = getRenderstate(state.renderstate)
+    if (state) {
+      state.renderstate = state
+      render(state)
+    }
+    if (sideeffect) sideeffect(element, state.renderstate)
+    state.lastScrollY = scrollY
+  }
 
-	const destroy = () => {
-		element.style.position = cache.position
-		element.style.top = cache.top
-		element.style.left = cache.left
-		element.style.width = cache.width
-		document.body.style.paddingTop = cache.bodyPaddingTop
+  const cache = {
+    position: element.style.position,
+    top: element.style.top,
+    left: element.style.left,
+    width: element.style.width,
+    bodyPaddingTop: document.body.style.paddingTop,
+    scrollHandler: onAnimationFrame(onScroll),
+    resizeHandler: onAnimationFrame(() => {
+      setBodyPadding()
+      onScroll()
+    }),
+  }
 
-		removeEventListener('scroll', cache.scrollHandler)
-		removeEventListener('resize', cache.resizeHandler)
-	}
+  const destroy = () => {
+    element.style.position = cache.position
+    element.style.top = cache.top
+    element.style.left = cache.left
+    element.style.width = cache.width
+    document.body.style.paddingTop = cache.bodyPaddingTop
 
-	const setBodyPadding = () =>
-		(document.body.style.paddingTop = element.offsetHeight + 'px')
+    removeEventListener('scroll', cache.scrollHandler)
+    removeEventListener('resize', cache.resizeHandler)
+  }
 
-	const init = () => {
-		setBodyPadding()
-		element.style.width = '100%'
-		element.style.left = 0
+  const setBodyPadding = () =>
+    (document.body.style.paddingTop = element.offsetHeight + 'px')
 
-		addEventListener('scroll', cache.scrollHandler)
-		addEventListener('resize', cache.resizeHandler)
+  const init = () => {
+    setBodyPadding()
+    element.style.width = '100%'
+    element.style.left = 0
 
-		cache.scrollHandler()
-	}
+    addEventListener('scroll', cache.scrollHandler)
+    addEventListener('resize', cache.resizeHandler)
 
-	init()
+    cache.scrollHandler()
+  }
 
-	return { destroy }
+  init()
+
+  return { destroy }
 }
 
 export default withScrollback
